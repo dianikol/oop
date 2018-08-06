@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+    db:
+        image: mysql:5.6
+        container_name: oop_db
+        ports:
+            - 3306:3306
+        volumes:
+            - ./database:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=elpe_local
+    php-apache-server:
+        build: ./environment/php-apache-server
+        container_name: oop_server_php
+        environment:
+            - VIRTUAL_HOST=oop.loc
+        ports:
+            - 80:80
+        volumes:
+            - ./www/:/var/www/oop/
+            #- ./environment/php-apache/default-ssl.conf:/etc/apache2/sites-available/default-ssl.conf
+            - ./environment/php-apache-server/ssmtp.conf:/etc/ssmtp/ssmtp.conf
+            - ./environment/php-apache-server/php.ini:/usr/local/etc/php/php.ini
+            - ./environment/php-apache-server/apache-config.conf:/etc/apache2/sites-enabled/000-default.conf
